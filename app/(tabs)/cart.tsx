@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   cartList: {
     paddingHorizontal: 16,
     paddingTop: 16,
+    paddingBottom: 20,
   },
   footer: {
     backgroundColor: '#FFFFFF',
@@ -203,6 +204,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 8,
+    marginBottom: 70, // Tab bar için boşluk
   },
   summaryContainer: {
     marginBottom: 20,

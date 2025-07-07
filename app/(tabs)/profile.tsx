@@ -51,7 +51,7 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <LinearGradient
           colors={['#4A90A4', '#357A8A']}
           style={styles.header}
@@ -147,6 +147,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
+  scrollContent: {
+    paddingBottom: 100, // Tab bar için extra boşluk
+  },
   header: {
     paddingHorizontal: 20,
     paddingTop: 60,
@@ -165,6 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
+    paddingTop: 100,
   },
   authIconContainer: {
     width: 120,

@@ -22,7 +22,7 @@ export default function HomeScreen() {
     const loadData = async () => {
       try {
         // Simulate loading delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         dispatch(setProducts(mockProducts));
         setFlashProducts(mockProducts.slice(0, 6));
@@ -124,29 +124,6 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed Navigation */}
-      <View style={styles.fixedNav}>
-        <TouchableOpacity style={styles.navButton}>
-          <Menu size={24} color="#4A90A4" />
-        </TouchableOpacity>
-        <Image 
-          source={require('@/assets/images/hobilikPrimary.png')} 
-          style={styles.navLogo}
-          resizeMode="contain"
-        />
-        <View style={styles.navActions}>
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/search')}>
-            <Search size={24} color="#4A90A4" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/cart')}>
-            <ShoppingCart size={24} color="#4A90A4" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/profile')}>
-            <User size={24} color="#4A90A4" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
         {/* Header Stats */}
         <Animated.View 
@@ -162,6 +139,11 @@ export default function HomeScreen() {
             colors={['#4A90A4', '#357A8A']}
             style={styles.statsGradient}
           >
+            <Image 
+              source={require('@/assets/images/hobilikPrimary.png')} 
+              style={styles.headerLogo}
+              resizeMode="contain"
+            />
             <Text style={styles.welcomeText}>Hoş Geldiniz</Text>
             <Text style={styles.statsTitle}>Sanatkarın Dokunuşu</Text>
             
@@ -290,7 +272,7 @@ export default function HomeScreen() {
           </View>
         </Animated.View>
 
-        {/* Bottom Spacer */}
+        {/* Bottom Spacer for Tab Bar */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
     </SafeAreaView>
@@ -301,34 +283,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8F9FA',
-  },
-  fixedNav: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 15,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-    zIndex: 1000,
-  },
-  navButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F8F9FA',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navLogo: {
-    height: 35,
-    width: 120,
-  },
-  navActions: {
-    flexDirection: 'row',
-    gap: 8,
   },
   scrollView: {
     flex: 1,
@@ -375,12 +329,18 @@ const styles = StyleSheet.create({
   },
   headerStats: {
     margin: 16,
+    marginTop: 60,
     borderRadius: 20,
     overflow: 'hidden',
   },
   statsGradient: {
     padding: 24,
     alignItems: 'center',
+  },
+  headerLogo: {
+    height: 50,
+    width: 180,
+    marginBottom: 16,
   },
   welcomeText: {
     fontSize: 16,
@@ -581,6 +541,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   bottomSpacer: {
-    height: 40,
+    height: 90, // Tab bar için extra boşluk
   },
 });

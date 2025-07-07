@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   productsList: {
     paddingHorizontal: 12,
     paddingTop: 16,
-    paddingBottom: 20,
+    paddingBottom: 100, // Tab bar için extra boşluk
   },
   row: {
     justifyContent: 'space-between',
