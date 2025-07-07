@@ -15,6 +15,7 @@ export default function ProfileScreen() {
     dispatch(logout());
   };
 
+  
   const profileOptions = [
     { icon: Package, label: 'Siparişlerim', onPress: () => {}, color: '#4A90A4' },
     { icon: Heart, label: 'Favorilerim', onPress: () => {}, color: '#FF6B6B' },
