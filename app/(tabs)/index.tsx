@@ -50,6 +50,7 @@ export default function HomeScreen() {
 
     loadData();
   }, [dispatch, fadeAnim, slideAnim]);
+  
 
   const renderFlashProduct = ({ item, index }: { item: any; index: number }) => (
     <Animated.View 
