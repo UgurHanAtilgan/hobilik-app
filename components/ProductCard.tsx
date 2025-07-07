@@ -28,7 +28,7 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
         
         {/* Gradient Overlay */}
         <LinearGradient
-          colors={['transparent', 'rgba(0,0,0,0.3)']}
+          colors={['transparent', 'rgba(0,0,0,0.2)']}
           style={styles.imageOverlay}
         />
         
@@ -37,7 +37,7 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
           style={styles.wishlistButton}
           onPress={() => onAddToWishlist?.(product.id)}
         >
-          <Heart size={18} color="#666" strokeWidth={2} />
+          <Heart size={16} color="#666" strokeWidth={2} />
         </TouchableOpacity>
         
         {/* Featured Badge */}
@@ -49,7 +49,7 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
         
         {/* Quick Add Button */}
         <TouchableOpacity style={styles.quickAddButton}>
-          <ShoppingCart size={16} color="#FFFFFF" strokeWidth={2} />
+          <ShoppingCart size={14} color="#FFFFFF" strokeWidth={2} />
         </TouchableOpacity>
       </View>
       
@@ -63,7 +63,7 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
         </Text>
         
         <View style={styles.ratingContainer}>
-          <Star size={12} color="#FFB800" fill="#FFB800" />
+          <Star size={10} color="#FFB800" fill="#FFB800" />
           <Text style={styles.rating}>
             {product.rating}
           </Text>
@@ -88,14 +88,14 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
-    marginBottom: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    marginBottom: 4,
   },
   imageContainer: {
     position: 'relative',
@@ -111,83 +111,83 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: '30%',
+    height: '25%',
   },
   wishlistButton: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 2,
+    elevation: 1,
   },
   featuredBadge: {
     position: 'absolute',
-    top: 12,
-    left: 12,
+    top: 8,
+    left: 8,
     backgroundColor: '#FF6B6B',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 6,
   },
   featuredText: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 8,
     fontWeight: '700',
     letterSpacing: 0.5,
   },
   quickAddButton: {
     position: 'absolute',
-    bottom: 12,
-    right: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    bottom: 8,
+    right: 8,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: '#4A90A4',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
   },
   content: {
-    padding: 12,
+    padding: 10,
   },
   title: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
     color: '#1A1A1A',
-    marginBottom: 4,
-    lineHeight: 20,
+    marginBottom: 3,
+    lineHeight: 18,
   },
   seller: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#666666',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   rating: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#1A1A1A',
     fontWeight: '600',
-    marginLeft: 4,
+    marginLeft: 3,
   },
   reviewCount: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#999999',
     marginLeft: 2,
   },
@@ -197,18 +197,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
     color: '#4A90A4',
   },
   stockBadge: {
     backgroundColor: '#FFE5E5',
-    paddingHorizontal: 6,
+    paddingHorizontal: 5,
     paddingVertical: 2,
-    borderRadius: 8,
+    borderRadius: 6,
   },
   stockText: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#E74C3C',
     fontWeight: '600',
   },

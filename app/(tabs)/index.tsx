@@ -1,11 +1,12 @@
-import { ScrollView, View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { useEffect, useState } from 'react';
+import { ScrollView, View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setProducts } from '@/store/slices/productSlice';
 import { mockProducts } from '@/services/mockData';
 import ProductCard from '@/components/ProductCard';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Sparkles, TrendingUp, Star, Heart, ArrowRight } from 'lucide-react-native';
+import { Sparkles, TrendingUp, Star, Heart, ArrowRight, Zap, Search, ShoppingCart, User, Menu } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -13,27 +14,82 @@ export default function HomeScreen() {
   const dispatch = useAppDispatch();
   const { products, featuredProducts } = useAppSelector(state => state.product);
   const [isLoading, setIsLoading] = useState(true);
+  const [flashProducts, setFlashProducts] = useState([]);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
-    try {
-      dispatch(setProducts(mockProducts));
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error loading products:', error);
-      setIsLoading(false);
-    }
-  }, [dispatch]);
+    const loadData = async () => {
+      try {
+        // Simulate loading delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        dispatch(setProducts(mockProducts));
+        setFlashProducts(mockProducts.slice(0, 6));
+        setIsLoading(false);
+        
+        // Start animations
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      } catch (error) {
+        console.error('Error loading products:', error);
+        setIsLoading(false);
+      }
+    };
 
-  const renderFeaturedProduct = ({ item }: { item: any }) => (
-    <View style={styles.featuredProductContainer}>
-      <ProductCard product={item} />
-    </View>
+    loadData();
+  }, [dispatch, fadeAnim, slideAnim]);
+
+  const renderFlashProduct = ({ item, index }: { item: any; index: number }) => (
+    <Animated.View 
+      style={[
+        styles.flashProductContainer,
+        {
+          opacity: fadeAnim,
+          transform: [
+            {
+              translateY: slideAnim,
+            },
+          ],
+        },
+      ]}
+    >
+      <TouchableOpacity 
+        style={styles.flashCard}
+        onPress={() => router.push(`/product/${item.id}`)}
+      >
+        <Image source={{ uri: item.images[0] }} style={styles.flashImage} />
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.7)']}
+          style={styles.flashOverlay}
+        >
+          <View style={styles.flashBadge}>
+            <Zap size={12} color="#FFFFFF" fill="#FFFFFF" />
+            <Text style={styles.flashBadgeText}>FLASH</Text>
+          </View>
+          <View style={styles.flashContent}>
+            <Text style={styles.flashTitle} numberOfLines={2}>{item.title}</Text>
+            <Text style={styles.flashPrice}>₺{item.price}</Text>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animated.View>
   );
 
   const renderCategory = ({ item }: { item: string }) => (
     <TouchableOpacity style={styles.categoryCard}>
       <View style={styles.categoryIconContainer}>
-        <Sparkles size={20} color="#4A90A4" />
+        <Sparkles size={16} color="#4A90A4" />
       </View>
       <Text style={styles.categoryText}>{item}</Text>
     </TouchableOpacity>
@@ -46,12 +102,19 @@ export default function HomeScreen() {
           colors={['#4A90A4', '#357A8A']}
           style={styles.loadingContainer}
         >
-          <Image 
-            source={require('@/assets/images/hobilikPrimary.png')} 
-            style={styles.loadingLogo}
-            resizeMode="contain"
-          />
-          <Text style={styles.loadingText}>Sanatkarın dünyasına hoş geldiniz</Text>
+          <Animated.View style={[styles.loadingContent, { opacity: fadeAnim }]}>
+            <Image 
+              source={require('@/assets/images/hobilikPrimary.png')} 
+              style={styles.loadingLogo}
+              resizeMode="contain"
+            />
+            <Text style={styles.loadingText}>Sanatkarın dünyasına hoş geldiniz</Text>
+            <View style={styles.loadingDots}>
+              <View style={[styles.dot, styles.dot1]} />
+              <View style={[styles.dot, styles.dot2]} />
+              <View style={[styles.dot, styles.dot3]} />
+            </View>
+          </Animated.View>
         </LinearGradient>
       </SafeAreaView>
     );
@@ -61,44 +124,117 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <LinearGradient
-          colors={['#4A90A4', '#357A8A']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.header}
+      {/* Fixed Navigation */}
+      <View style={styles.fixedNav}>
+        <TouchableOpacity style={styles.navButton}>
+          <Menu size={24} color="#4A90A4" />
+        </TouchableOpacity>
+        <Image 
+          source={require('@/assets/images/hobilikPrimary.png')} 
+          style={styles.navLogo}
+          resizeMode="contain"
+        />
+        <View style={styles.navActions}>
+          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/search')}>
+            <Search size={24} color="#4A90A4" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/cart')}>
+            <ShoppingCart size={24} color="#4A90A4" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => router.push('/(tabs)/profile')}>
+            <User size={24} color="#4A90A4" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+        {/* Header Stats */}
+        <Animated.View 
+          style={[
+            styles.headerStats,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
         >
-          <View style={styles.headerContent}>
-            <Image 
-              source={require('@/assets/images/hobilikPrimary.png')} 
-              style={styles.logo}
-              resizeMode="contain"
-            />
-            <Text style={styles.headerTitle}>Sanatkarın Dokunuşu</Text>
-            <Text style={styles.headerSubtitle}>El yapımı ürünler ve zanaat eserleri</Text>
+          <LinearGradient
+            colors={['#4A90A4', '#357A8A']}
+            style={styles.statsGradient}
+          >
+            <Text style={styles.welcomeText}>Hoş Geldiniz</Text>
+            <Text style={styles.statsTitle}>Sanatkarın Dokunuşu</Text>
             
-            <View style={styles.statsContainer}>
-              <View style={styles.statItem}>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
                 <Text style={styles.statNumber}>1000+</Text>
                 <Text style={styles.statLabel}>Ürün</Text>
               </View>
-              <View style={styles.statDivider} />
-              <View style={styles.statItem}>
+              <View style={styles.statCard}>
                 <Text style={styles.statNumber}>500+</Text>
                 <Text style={styles.statLabel}>Sanatkar</Text>
               </View>
-              <View style={styles.statDivider} />
-              <View style={styles.statItem}>
+              <View style={styles.statCard}>
                 <Text style={styles.statNumber}>50+</Text>
                 <Text style={styles.statLabel}>Şehir</Text>
               </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statNumber}>%100</Text>
+                <Text style={styles.statLabel}>Memnuniyet</Text>
+              </View>
             </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+        </Animated.View>
 
-        {/* Quick Categories */}
-        <View style={styles.section}>
+        {/* Flash Products */}
+        <Animated.View 
+          style={[
+            styles.section,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          <LinearGradient
+            colors={['#FF6B6B', '#FF8E53', '#FFB800']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.flashHeader}
+          >
+            <View style={styles.flashHeaderContent}>
+              <View style={styles.flashTitleContainer}>
+                <Zap size={24} color="#FFFFFF" fill="#FFFFFF" />
+                <Text style={styles.flashTitle}>Flash Ürünler</Text>
+              </View>
+              <TouchableOpacity style={styles.flashSeeAll}>
+                <Text style={styles.flashSeeAllText}>Tümü</Text>
+                <ArrowRight size={16} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.flashSubtitle}>Sınırlı süre özel fiyatlar</Text>
+          </LinearGradient>
+          
+          <FlatList
+            data={flashProducts}
+            renderItem={renderFlashProduct}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.flashList}
+          />
+        </Animated.View>
+
+        {/* Categories */}
+        <Animated.View 
+          style={[
+            styles.section,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Kategoriler</Text>
             <TouchableOpacity style={styles.seeAllButton}>
@@ -114,13 +250,21 @@ export default function HomeScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoriesList}
           />
-        </View>
+        </Animated.View>
 
         {/* Featured Products */}
-        <View style={styles.section}>
+        <Animated.View 
+          style={[
+            styles.section,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
           <View style={styles.sectionHeader}>
             <View style={styles.sectionTitleContainer}>
-              <Sparkles size={20} color="#FF6B6B" />
+              <Sparkles size={20} color="#4A90A4" />
               <Text style={styles.sectionTitle}>Öne Çıkan Ürünler</Text>
             </View>
             <TouchableOpacity style={styles.seeAllButton}>
@@ -128,36 +272,23 @@ export default function HomeScreen() {
               <ArrowRight size={16} color="#4A90A4" />
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={featuredProducts}
-            renderItem={renderFeaturedProduct}
-            keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.featuredList}
-          />
-        </View>
-
-        {/* Trending Section */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleContainer}>
-              <TrendingUp size={20} color="#4CAF50" />
-              <Text style={styles.sectionTitle}>Trend Ürünler</Text>
-            </View>
-            <TouchableOpacity style={styles.seeAllButton}>
-              <Text style={styles.seeAllText}>Tümü</Text>
-              <ArrowRight size={16} color="#4A90A4" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.trendingGrid}>
-            {products.slice(0, 4).map((product, index) => (
-              <View key={product.id} style={styles.trendingItem}>
+          <View style={styles.featuredGrid}>
+            {featuredProducts.slice(0, 4).map((product, index) => (
+              <Animated.View 
+                key={product.id} 
+                style={[
+                  styles.featuredItem,
+                  {
+                    opacity: fadeAnim,
+                    transform: [{ translateY: slideAnim }],
+                  },
+                ]}
+              >
                 <ProductCard product={product} />
-              </View>
+              </Animated.View>
             ))}
           </View>
-        </View>
+        </Animated.View>
 
         {/* Bottom Spacer */}
         <View style={styles.bottomSpacer} />
@@ -171,11 +302,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F8F9FA',
   },
+  fixedNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 15,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    zIndex: 1000,
+  },
+  navButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8F9FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navLogo: {
+    height: 35,
+    width: 120,
+  },
+  navActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  scrollView: {
+    flex: 1,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+  },
+  loadingContent: {
+    alignItems: 'center',
   },
   loadingLogo: {
     height: 80,
@@ -187,50 +351,66 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     opacity: 0.9,
+    marginBottom: 30,
   },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 32,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+  loadingDots: {
+    flexDirection: 'row',
+    gap: 8,
   },
-  headerContent: {
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FFFFFF',
+    opacity: 0.6,
+  },
+  dot1: {
+    animationDelay: '0s',
+  },
+  dot2: {
+    animationDelay: '0.2s',
+  },
+  dot3: {
+    animationDelay: '0.4s',
+  },
+  headerStats: {
+    margin: 16,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  statsGradient: {
+    padding: 24,
     alignItems: 'center',
   },
-  logo: {
-    height: 50,
-    width: 180,
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  headerSubtitle: {
+  welcomeText: {
     fontSize: 16,
     color: '#FFFFFF',
     opacity: 0.9,
+    marginBottom: 8,
+  },
+  statsTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 24,
   },
-  statsContainer: {
+  statsGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  statCard: {
+    width: '48%',
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-  },
-  statItem: {
+    padding: 16,
     alignItems: 'center',
-    flex: 1,
+    marginBottom: 12,
   },
   statNumber: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: '700',
     color: '#FFFFFF',
     marginBottom: 4,
@@ -240,14 +420,96 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     opacity: 0.8,
   },
-  statDivider: {
-    width: 1,
-    height: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    marginHorizontal: 16,
-  },
   section: {
-    marginTop: 24,
+    marginBottom: 24,
+  },
+  flashHeader: {
+    marginHorizontal: 16,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+  },
+  flashHeaderContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  flashTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  flashTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginLeft: 8,
+  },
+  flashSeeAll: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  flashSeeAllText: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginRight: 4,
+  },
+  flashSubtitle: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 0.9,
+  },
+  flashList: {
+    paddingHorizontal: 16,
+  },
+  flashProductContainer: {
+    marginRight: 12,
+  },
+  flashCard: {
+    width: 140,
+    height: 180,
+    borderRadius: 16,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  flashImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  flashOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  flashBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  flashBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginLeft: 4,
+  },
+  flashContent: {
+    alignItems: 'flex-start',
+  },
+  flashPrice: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginTop: 4,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -281,51 +543,44 @@ const styles = StyleSheet.create({
   },
   categoryCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 12,
+    padding: 12,
     marginRight: 12,
     alignItems: 'center',
-    minWidth: 80,
+    minWidth: 70,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowRadius: 4,
+    elevation: 2,
   },
   categoryIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: '#F0F8FF',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   categoryText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     color: '#1A1A1A',
     textAlign: 'center',
   },
-  featuredList: {
-    paddingHorizontal: 20,
-  },
-  featuredProductContainer: {
-    width: 200,
-    marginRight: 16,
-  },
-  trendingGrid: {
+  featuredGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 12,
     justifyContent: 'space-between',
   },
-  trendingItem: {
+  featuredItem: {
     width: (width - 48) / 2,
     marginHorizontal: 4,
     marginBottom: 16,
   },
   bottomSpacer: {
-    height: 20,
+    height: 40,
   },
 });
