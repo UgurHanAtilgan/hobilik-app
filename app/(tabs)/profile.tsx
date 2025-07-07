@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Ima
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logout } from '@/store/slices/authSlice';
 import { mockUser } from '@/services/mockData';
-import { User, Settings, Package, Heart, CreditCard, HelpCircle, LogOut, Star, Award } from 'lucide-react-native';
+import { User, Settings, Package, Heart, CreditCard, CircleHelp as HelpCircle, LogOut, Star, Award } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ProfileScreen() {
