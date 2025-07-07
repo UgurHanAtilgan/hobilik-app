@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
+
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
   const { products, featuredProducts } = useAppSelector(state => state.product);
