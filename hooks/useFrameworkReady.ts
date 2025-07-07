@@ -8,6 +8,12 @@ declare global {
 
 export function useFrameworkReady() {
   useEffect(() => {
-    window.frameworkReady?.();
-  });
+    try {
+      if (typeof window !== 'undefined' && window.frameworkReady) {
+        window.frameworkReady();
+      }
+    } catch (error) {
+      console.log('Framework ready hook error:', error);
+    }
+  }, []);
 }

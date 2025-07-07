@@ -1,5 +1,5 @@
 import { ScrollView, View, Text, StyleSheet, SafeAreaView, FlatList, Image } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setProducts } from '@/store/slices/productSlice';
 import { mockProducts } from '@/services/mockData';
@@ -10,9 +10,16 @@ import { Sparkles, TrendingUp } from 'lucide-react-native';
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
   const { products, featuredProducts } = useAppSelector(state => state.product);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(setProducts(mockProducts));
+    try {
+      dispatch(setProducts(mockProducts));
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      setIsLoading(false);
+    }
   }, [dispatch]);
 
   const renderFeaturedProduct = ({ item }: { item: any }) => (
@@ -20,6 +27,16 @@ export default function HomeScreen() {
       <ProductCard product={item} />
     </View>
   );
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Ürünler yükleniyor...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -93,6 +110,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#666666',
+    textAlign: 'center',
   },
   header: {
     padding: 24,
