@@ -51,7 +51,7 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
         </View>
         
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+          <Text style={styles.price}>₺{product.price.toFixed(2)}</Text>
           {product.stock < 5 && (
             <Text style={styles.stockWarning}>Only {product.stock} left</Text>
           )}
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     left: 12,
-    backgroundColor: '#8B4513',
+    backgroundColor: '#2E7D32',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#8B4513',
+    color: '#2E7D32',
   },
   stockWarning: {
     fontSize: 12,
