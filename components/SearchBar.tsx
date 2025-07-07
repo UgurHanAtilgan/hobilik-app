@@ -8,11 +8,11 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-export default function SearchBar({ value, onChangeText, onClear, placeholder = 'Search products...' }: SearchBarProps) {
+export default function SearchBar({ value, onChangeText, onClear, placeholder = 'Ara...' }: SearchBarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.searchIcon}>
-        <Search size={20} color="#666" />
+        <Search size={20} color="#999" />
       </View>
       <TextInput
         style={styles.input}
@@ -24,7 +24,7 @@ export default function SearchBar({ value, onChangeText, onClear, placeholder = 
       />
       {value.length > 0 && (
         <TouchableOpacity style={styles.clearButton} onPress={onClear}>
-          <X size={20} color="#666" />
+          <X size={20} color="#999" />
         </TouchableOpacity>
       )}
     </View>
@@ -35,15 +35,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     paddingHorizontal: 16,
     height: 50,
-    marginHorizontal: 16,
-    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 12,
   },
   input: {
     flex: 1,
@@ -53,5 +56,6 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     padding: 4,
+    marginLeft: 8,
   },
 });

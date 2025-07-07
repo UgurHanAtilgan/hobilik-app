@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Chrome as Home, Search, ShoppingCart, User } from 'lucide-react-native';
+import { Home, Search, ShoppingCart, User } from 'lucide-react-native';
 import { useAppSelector } from '@/store';
 
 export default function TabLayout() {
@@ -11,17 +11,25 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
-          borderTopWidth: 1,
-          borderTopColor: '#E0E0E0',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          borderTopWidth: 0,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 8,
         },
-        tabBarActiveTintColor: '#2E7D32',
-        tabBarInactiveTintColor: '#666666',
+        tabBarActiveTintColor: '#4A90A4',
+        tabBarInactiveTintColor: '#8E8E93',
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
+          fontSize: 11,
+          fontWeight: '600',
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 2,
         },
       }}
     >
@@ -30,16 +38,16 @@ export default function TabLayout() {
         options={{
           title: 'Ana Sayfa',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size} color={color} />
+            <Home size={size} color={color} strokeWidth={2.5} />
           ),
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Ara',
+          title: 'Keşfet',
           tabBarIcon: ({ color, size }) => (
-            <Search size={size} color={color} />
+            <Search size={size} color={color} strokeWidth={2.5} />
           ),
         }}
       />
@@ -48,9 +56,15 @@ export default function TabLayout() {
         options={{
           title: 'Sepet',
           tabBarIcon: ({ color, size }) => (
-            <ShoppingCart size={size} color={color} />
+            <ShoppingCart size={size} color={color} strokeWidth={2.5} />
           ),
           tabBarBadge: cartItemCount > 0 ? cartItemCount : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: '#FF6B6B',
+            color: '#FFFFFF',
+            fontSize: 12,
+            fontWeight: '700',
+          },
         }}
       />
       <Tabs.Screen
@@ -58,7 +72,7 @@ export default function TabLayout() {
         options={{
           title: 'Profil',
           tabBarIcon: ({ color, size }) => (
-            <User size={size} color={color} />
+            <User size={size} color={color} strokeWidth={2.5} />
           ),
         }}
       />

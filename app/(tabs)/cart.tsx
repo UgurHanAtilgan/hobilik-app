@@ -2,8 +2,9 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Alert
 import { useAppDispatch, useAppSelector } from '@/store';
 import { removeFromCart, updateQuantity, clearCart } from '@/store/slices/cartSlice';
 import CartItem from '@/components/CartItem';
-import { ShoppingBag, CreditCard } from 'lucide-react-native';
+import { ShoppingBag, CreditCard, Trash2 } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CartScreen() {
   const dispatch = useAppDispatch();
@@ -43,13 +44,27 @@ export default function CartScreen() {
   if (items.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
+        <LinearGradient
+          colors={['#4A90A4', '#357A8A']}
+          style={styles.header}
+        >
           <Text style={styles.title}>Alışveriş Sepeti</Text>
-        </View>
+        </LinearGradient>
+        
         <View style={styles.emptyContainer}>
-          <ShoppingBag size={80} color="#CCCCCC" />
+          <View style={styles.emptyIconContainer}>
+            <ShoppingBag size={80} color="#CCCCCC" />
+          </View>
           <Text style={styles.emptyTitle}>Sepetiniz boş</Text>
-          <Text style={styles.emptySubtitle}>Güzel el yapımı ürünler ekleyerek başlayın</Text>
+          <Text style={styles.emptySubtitle}>
+            Güzel el yapımı ürünler ekleyerek alışverişe başlayın
+          </Text>
+          <TouchableOpacity 
+            style={styles.shopButton}
+            onPress={() => router.push('/(tabs)')}
+          >
+            <Text style={styles.shopButtonText}>Alışverişe Başla</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -57,12 +72,16 @@ export default function CartScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <LinearGradient
+        colors={['#4A90A4', '#357A8A']}
+        style={styles.header}
+      >
         <Text style={styles.title}>Alışveriş Sepeti</Text>
-        <TouchableOpacity onPress={handleClearCart}>
-          <Text style={styles.clearButton}>Tümünü Sil</Text>
+        <TouchableOpacity style={styles.clearButton} onPress={handleClearCart}>
+          <Trash2 size={18} color="#FFFFFF" />
+          <Text style={styles.clearButtonText}>Temizle</Text>
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
 
       <FlatList
         data={items}
@@ -100,30 +119,36 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#F8F9FA',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1A1A1A',
-    fontFamily: 'Inter-Bold',
+    color: '#FFFFFF',
   },
   clearButton: {
-    fontSize: 16,
-    color: '#E74C3C',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  clearButtonText: {
+    fontSize: 14,
+    color: '#FFFFFF',
     fontWeight: '600',
-    fontFamily: 'Inter-SemiBold',
+    marginLeft: 6,
   },
   emptyContainer: {
     flex: 1,
@@ -131,19 +156,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
   },
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 24,
+    fontWeight: '700',
     color: '#1A1A1A',
-    marginTop: 16,
-    fontFamily: 'Inter-SemiBold',
+    marginBottom: 12,
   },
   emptySubtitle: {
     fontSize: 16,
     color: '#666666',
     textAlign: 'center',
-    marginTop: 8,
-    fontFamily: 'Inter-Regular',
+    lineHeight: 24,
+    marginBottom: 32,
+  },
+  shopButton: {
+    backgroundColor: '#4A90A4',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 25,
+  },
+  shopButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
   cartList: {
     paddingHorizontal: 16,
@@ -151,12 +195,17 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
   },
   summaryContainer: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   summaryRow: {
     flexDirection: 'row',
@@ -167,13 +216,11 @@ const styles = StyleSheet.create({
   summaryLabel: {
     fontSize: 16,
     color: '#666666',
-    fontFamily: 'Inter-Regular',
   },
   summaryValue: {
     fontSize: 16,
     color: '#1A1A1A',
     fontWeight: '600',
-    fontFamily: 'Inter-SemiBold',
   },
   totalRow: {
     borderTopWidth: 1,
@@ -185,27 +232,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#1A1A1A',
-    fontFamily: 'Inter-Bold',
   },
   totalValue: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: '#2E7D32',
-    fontFamily: 'Inter-Bold',
+    color: '#4A90A4',
   },
   checkoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#4A90A4',
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 25,
     gap: 8,
   },
   checkoutButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
-    fontFamily: 'Inter-SemiBold',
   },
 });

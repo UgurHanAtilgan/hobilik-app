@@ -38,27 +38,30 @@ export default function CategoryFilter({ categories, selectedCategory, onSelectC
 const styles = StyleSheet.create({
   container: {
     flexGrow: 0,
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 8,
   },
   content: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   categoryButton: {
     paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    paddingVertical: 12,
+    borderRadius: 25,
+    backgroundColor: '#FFFFFF',
     marginRight: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   selectedCategory: {
-    backgroundColor: '#8B4513',
-    borderColor: '#8B4513',
+    backgroundColor: '#4A90A4',
   },
   categoryText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#666666',
   },
   selectedCategoryText: {

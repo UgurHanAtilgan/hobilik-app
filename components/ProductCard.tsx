@@ -1,13 +1,16 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Product } from '@/types';
-import { Heart, Star } from 'lucide-react-native';
+import { Heart, Star, ShoppingCart } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface ProductCardProps {
   product: Product;
   onPress?: () => void;
   onAddToWishlist?: (productId: string) => void;
 }
+
+const { width } = Dimensions.get('window');
 
 export default function ProductCard({ product, onPress, onAddToWishlist }: ProductCardProps) {
   const handlePress = () => {
@@ -19,41 +22,62 @@ export default function ProductCard({ product, onPress, onAddToWishlist }: Produ
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
+    <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.9}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: product.images[0] }} style={styles.image} />
+        
+        {/* Gradient Overlay */}
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.3)']}
+          style={styles.imageOverlay}
+        />
+        
+        {/* Wishlist Button */}
         <TouchableOpacity 
           style={styles.wishlistButton}
           onPress={() => onAddToWishlist?.(product.id)}
         >
-          <Heart size={20} color="#666" />
+          <Heart size={18} color="#666" strokeWidth={2} />
         </TouchableOpacity>
+        
+        {/* Featured Badge */}
         {product.featured && (
           <View style={styles.featuredBadge}>
-            <Text style={styles.featuredText}>Featured</Text>
+            <Text style={styles.featuredText}>ÖNE ÇIKAN</Text>
           </View>
         )}
+        
+        {/* Quick Add Button */}
+        <TouchableOpacity style={styles.quickAddButton}>
+          <ShoppingCart size={16} color="#FFFFFF" strokeWidth={2} />
+        </TouchableOpacity>
       </View>
       
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>
           {product.title}
         </Text>
+        
         <Text style={styles.seller} numberOfLines={1}>
-          by {product.sellerName}
+          {product.sellerName}
         </Text>
         
         <View style={styles.ratingContainer}>
-          <Star size={14} color="#FFD700" fill="#FFD700" />
+          <Star size={12} color="#FFB800" fill="#FFB800" />
           <Text style={styles.rating}>
-            {product.rating} ({product.reviewCount})
+            {product.rating}
+          </Text>
+          <Text style={styles.reviewCount}>
+            ({product.reviewCount})
           </Text>
         </View>
         
         <View style={styles.priceContainer}>
           <Text style={styles.price}>₺{product.price.toFixed(2)}</Text>
           {product.stock < 5 && (
-            <Text style={styles.stockWarning}>Only {product.stock} left</Text>
+            <View style={styles.stockBadge}>
+              <Text style={styles.stockText}>Son {product.stock}</Text>
+            </View>
           )}
         </View>
       </View>
@@ -65,13 +89,13 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    marginBottom: 8,
   },
   imageContainer: {
     position: 'relative',
@@ -82,13 +106,20 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  imageOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '30%',
+  },
   wishlistButton: {
     position: 'absolute',
     top: 12,
     right: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,28 +133,45 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 12,
     left: 12,
-    backgroundColor: '#2E7D32',
+    backgroundColor: '#FF6B6B',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   featuredText: {
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  quickAddButton: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#4A90A4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   content: {
     padding: 12,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     color: '#1A1A1A',
     marginBottom: 4,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   seller: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666666',
     marginBottom: 8,
   },
@@ -133,9 +181,15 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   rating: {
-    fontSize: 14,
-    color: '#666666',
+    fontSize: 12,
+    color: '#1A1A1A',
+    fontWeight: '600',
     marginLeft: 4,
+  },
+  reviewCount: {
+    fontSize: 12,
+    color: '#999999',
+    marginLeft: 2,
   },
   priceContainer: {
     flexDirection: 'row',
@@ -143,13 +197,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#2E7D32',
+    color: '#4A90A4',
   },
-  stockWarning: {
-    fontSize: 12,
+  stockBadge: {
+    backgroundColor: '#FFE5E5',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  stockText: {
+    fontSize: 10,
     color: '#E74C3C',
-    fontWeight: '500',
+    fontWeight: '600',
   },
 });
