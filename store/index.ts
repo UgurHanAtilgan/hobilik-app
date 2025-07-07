@@ -10,6 +10,15 @@ export const store = configureStore({
     cart: cartSlice,
     product: productSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Redux Toolkit'in serializable check'ini devre dışı bırak
+        // çünkü Date objelerini string olarak saklıyoruz
+        ignoredActions: [],
+        ignoredPaths: [],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

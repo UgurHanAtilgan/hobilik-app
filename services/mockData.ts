@@ -21,7 +21,7 @@ export const mockProducts: Product[] = [
     rating: 4.8,
     reviewCount: 23,
     featured: true,
-    createdAt: new Date('2024-01-15'),
+    createdAt: '2024-01-15T00:00:00.000Z',
   },
   {
     id: '2',
@@ -43,7 +43,7 @@ export const mockProducts: Product[] = [
     rating: 4.9,
     reviewCount: 16,
     featured: false,
-    createdAt: new Date('2024-01-20'),
+    createdAt: '2024-01-20T00:00:00.000Z',
   },
   {
     id: '3',
@@ -65,7 +65,7 @@ export const mockProducts: Product[] = [
     rating: 4.7,
     reviewCount: 31,
     featured: true,
-    createdAt: new Date('2024-01-25'),
+    createdAt: '2024-01-25T00:00:00.000Z',
   },
   {
     id: '4',
@@ -87,7 +87,7 @@ export const mockProducts: Product[] = [
     rating: 4.9,
     reviewCount: 18,
     featured: false,
-    createdAt: new Date('2024-02-01'),
+    createdAt: '2024-02-01T00:00:00.000Z',
   },
   {
     id: '5',
@@ -109,7 +109,7 @@ export const mockProducts: Product[] = [
     rating: 4.8,
     reviewCount: 25,
     featured: true,
-    createdAt: new Date('2024-02-05'),
+    createdAt: '2024-02-05T00:00:00.000Z',
   },
   {
     id: '6',
@@ -131,7 +131,7 @@ export const mockProducts: Product[] = [
     rating: 4.6,
     reviewCount: 42,
     featured: false,
-    createdAt: new Date('2024-02-10'),
+    createdAt: '2024-02-10T00:00:00.000Z',
   },
 ];
 
@@ -142,7 +142,7 @@ export const mockUser: User = {
   lastName: 'Yılmaz',
   avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=200',
   isSeller: false,
-  createdAt: new Date('2024-01-01'),
+  createdAt: '2024-01-01T00:00:00.000Z',
 };
 
 export const mockReviews: Review[] = [
@@ -154,7 +154,7 @@ export const mockReviews: Review[] = [
     rating: 5,
     comment: 'Kesinlikle muhteşem! Kalitesi harika ve oturma odamda mükemmel görünüyor.',
     images: ['https://images.pexels.com/photos/6195262/pexels-photo-6195262.jpeg?auto=compress&cs=tinysrgb&w=400'],
-    createdAt: new Date('2024-01-20'),
+    createdAt: '2024-01-20T00:00:00.000Z',
   },
   {
     id: '2',
@@ -163,7 +163,7 @@ export const mockReviews: Review[] = [
     productId: '2',
     rating: 5,
     comment: 'Bu fincanlar inanılmaz! İşçilik birinci sınıf ve elinizde harika hissettiriyor.',
-    createdAt: new Date('2024-01-25'),
+    createdAt: '2024-01-25T00:00:00.000Z',
   },
   {
     id: '3',
@@ -172,7 +172,7 @@ export const mockReviews: Review[] = [
     productId: '3',
     rating: 4,
     comment: 'Güzel atkı, çok sıcak ve yumuşak. Örgü deseni çok hoş.',
-    createdAt: new Date('2024-02-01'),
+    createdAt: '2024-02-01T00:00:00.000Z',
   },
 ];
 

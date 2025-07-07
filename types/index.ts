@@ -5,7 +5,7 @@ export interface User {
   lastName: string;
   avatar?: string;
   isSeller: boolean;
-  createdAt: Date;
+  createdAt: string; // ISO string format
 }
 
 export interface Product {
@@ -26,7 +26,7 @@ export interface Product {
   rating: number;
   reviewCount: number;
   featured: boolean;
-  createdAt: Date;
+  createdAt: string; // ISO string format
 }
 
 export interface CartItem {
@@ -43,8 +43,8 @@ export interface Order {
   totalAmount: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   shippingAddress: Address;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string; // ISO string format
+  updatedAt: string; // ISO string format
 }
 
 export interface Address {
@@ -63,7 +63,7 @@ export interface Review {
   rating: number;
   comment: string;
   images?: string[];
-  createdAt: Date;
+  createdAt: string; // ISO string format
 }
 
 export type RootStackParamList = {
